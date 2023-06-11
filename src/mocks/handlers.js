@@ -1,5 +1,6 @@
 // src/mocks/handlers.js
 import { rest } from 'msw'
+import db from './resData'
 
 export const handlers = [
   // rest.post('/login', (req, res, ctx) => {
@@ -34,7 +35,24 @@ export const handlers = [
   //     }),
   //   )
   // }),
+  
+  rest.get('/', (req, res, ctx) => {
+    const isAuthenticated = sessionStorage.getItem('is-authenticated')
 
+    if (!isAuthenticated) {
+      return res(
+        ctx.status(403),
+        ctx.json({
+          errorMessage: 'Not authorized',
+        }),
+      )
+    }
+
+    return res(
+      ctx.status(200),
+      ctx.json(db),
+    )
+  }),
   
   rest.post('/login', ({body}, res, ctx) => {
     const savedPassword = JSON.parse(sessionStorage.getItem(body.login))?.password
