@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Tables from './Tables'
 import Alert from 'react-bootstrap/Alert';
+import NavBarWrapper from './NavBarWrapper';
 
 const ResForm = () => {
   const navigate = useNavigate(),
@@ -33,7 +34,7 @@ const ResForm = () => {
     if (logedIn !== 'true') navigate('/login')
   }, [logedIn])
 
-  return <>
+  return <NavBarWrapper>
     <h1 className="mb-3">Reserve a table</h1>
     <Form className="mb-3">
       <Form.Group className="mb-3 me-4 d-inline-block">
@@ -54,7 +55,7 @@ const ResForm = () => {
       </Form.Group>
     </Form>
     {isPastDate ? <Alert variant="warning">Choose correct date</Alert> : <Tables personQ={personQ} time={time} date={date}/>}
-  </>
+  </NavBarWrapper>
 }
 
 export default ResForm
