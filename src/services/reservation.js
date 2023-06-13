@@ -7,7 +7,10 @@ export const reservationApi = createApi({
     getReservations: builder.query({
       query: () => ``,
     }),
+    getTables: builder.query({
+      query: () => `reserve`,
+    }),
   }),
 })
 
-export const { useGetReservationsQuery } = reservationApi
+export const { useGetReservationsQuery, useGetTablesQuery } = reservationApi
