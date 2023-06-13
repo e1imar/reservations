@@ -1,43 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
-import { useGetReservationsQuery } from '../services/reservation';
+import React from 'react'
+import { useGetReservationsQuery } from '../services/reservation'
+import NavBarWrapper from './NavBarWrapper'
 
-function Reservations () {
-  const navigate = useNavigate()
-  const [logedIn, setLogedIn] = useState(sessionStorage.getItem('is-authenticated'))
-  const {data, loading, error} = useGetReservationsQuery()
+const Reservations = () => {
+  const {data, isLoading, error} = useGetReservationsQuery()
 
-  function logOut (e) {
-    e.preventDefault()
-    sessionStorage.removeItem('is-authenticated')
-    setLogedIn(sessionStorage.getItem('is-authenticated'))
-  }
-
-  useEffect(function () {
-    if (logedIn !== 'true') navigate('/login')
-  }, [logedIn])
-
-  if (loading) return <div>Loading...</div>
+  if (isLoading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
-  return (
-    <>
-      <Navbar>
-        <Container>
-          <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              <a href="/login" onClick={logOut}>Log out</a>
-            </Navbar.Text>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-      <main>
-        <h1>Resetvations</h1>
-        {data}
-      </main>
-    </>
-  );
+
+  return <NavBarWrapper>
+    <h1>Resetvations</h1>
+    {data}
+  </NavBarWrapper>
 }
 
 export default Reservations
