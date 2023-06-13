@@ -1,6 +1,6 @@
 // src/mocks/handlers.js
 import { rest } from 'msw'
-import db from './resData'
+import resTables from './resTables'
 
 export const handlers = [
   // rest.post('/login', (req, res, ctx) => {
@@ -36,7 +36,7 @@ export const handlers = [
   //   )
   // }),
   
-  rest.get('/', (req, res, ctx) => {
+  rest.get('/reserve', (req, res, ctx) => {
     const isAuthenticated = sessionStorage.getItem('is-authenticated')
 
     if (!isAuthenticated) {
@@ -50,7 +50,7 @@ export const handlers = [
 
     return res(
       ctx.status(200),
-      ctx.json(db),
+      ctx.json(resTables),
     )
   }),
   
