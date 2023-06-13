@@ -22,11 +22,11 @@ const NavBarWrapper = ({children}) => {
     navigate('/reserve')
   }
 
-  useEffect(function () {
+  useEffect(() => {
     if (logedIn !== 'true') navigate('/login')
   }, [logedIn])
 
-  return <>
+  return !logedIn ? <div>redirecting...</div> : <>
     <Navbar>
       <Container>
         <Nav className="me-auto">
