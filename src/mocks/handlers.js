@@ -55,9 +55,12 @@ export const handlers = [
   }),
   
   rest.post('/login', ({body}, res, ctx) => {
-    const savedPassword = JSON.parse(sessionStorage.getItem(body.login))?.password
-    if (savedPassword === body.password) {
+    const {login, password} = body,
+    savedPassword = JSON.parse(sessionStorage.getItem(login))?.password
+
+    if (savedPassword === password) {
       sessionStorage.setItem('is-authenticated', 'true')
+      sessionStorage.setItem('currentUser', login)
       return res(
         ctx.status(200),
       )
