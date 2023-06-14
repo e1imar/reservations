@@ -53,6 +53,48 @@ export const handlers = [
       ctx.json(resTables),
     )
   }),
+
+  rest.post('/reserve', ({body}, res, ctx) => {
+    const isAuthenticated = sessionStorage.getItem('is-authenticated')
+    
+    if (!isAuthenticated) {
+      return res(
+        ctx.status(403),
+        ctx.json({
+          errorMessage: 'Not authorized',
+        }),
+      )
+    }
+
+    const currentUser = sessionStorage.getItem('currentUser'),
+    currUsersData = localStorage.getItem(currentUser),
+    {tableID, tableGroup, date, time} = body,
+    reserves = resTables[tableGroup].find(table => table.id === tableID).reserves
+
+    let resInfo
+    
+    reserves[date] = reserves[date] || []
+    if (reserves[date].indexOf(time) >= 0) {
+      return res(
+        ctx.status(403),
+        ctx.json({
+          errorMessage: 'Already reserved',
+        }),
+      )
+    }
+    else reserves[date].push(time)
+
+    if (currUsersData) {
+      resInfo = [...JSON.parse(currUsersData), body]
+    }
+    else resInfo = [body]
+    localStorage.setItem(currentUser, JSON.stringify(resInfo))
+
+    return res(
+      ctx.status(200),
+      ctx.json(body)
+    )
+  }),
   
   rest.post('/login', ({body}, res, ctx) => {
     const {login, password} = body,
