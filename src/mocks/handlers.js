@@ -3,38 +3,67 @@ import { rest } from 'msw'
 import resTables from './resTables'
 
 export const handlers = [
-  // rest.post('/login', (req, res, ctx) => {
-  //   // Persist user's authentication in the session
-  //   sessionStorage.setItem('is-authenticated', 'true')
+  
+  rest.get('/', (req, res, ctx) => {
+    const isAuthenticated = sessionStorage.getItem('is-authenticated')
 
-  //   return res(
-  //     // Respond with a 200 status code
-  //     ctx.status(200),
-  //   )
-  // }),
+    if (!isAuthenticated) {
+      return res(
+        ctx.status(403),
+        ctx.json({
+          errorMessage: 'Not authorized',
+        }),
+      )
+    }
 
-  // rest.get('/user', (req, res, ctx) => {
-  //   // Check if the user is authenticated in this session
-  //   const isAuthenticated = sessionStorage.getItem('is-authenticated')
+    const currentUser = sessionStorage.getItem('currentUser'),
+    currUsersData = localStorage.getItem(currentUser)
 
-  //   if (!isAuthenticated) {
-  //     // If not authenticated, respond with a 403 error
-  //     return res(
-  //       ctx.status(403),
-  //       ctx.json({
-  //         errorMessage: 'Not authorized',
-  //       }),
-  //     )
-  //   }
+    if (!currUsersData) {
+      return res(
+        ctx.status(404),
+        ctx.json({
+          errorMessage: 'Not found',
+        }),
+      )
+    }
 
-  //   // If authenticated, return a mocked user details
-  //   return res(
-  //     ctx.status(200),
-  //     ctx.json({
-  //       username: 'admin',
-  //     }),
-  //   )
-  // }),
+    return res(
+      ctx.status(200),
+      ctx.json(JSON.parse(currUsersData)),
+    )
+  }),
+
+  rest.delete('/', ({body}, res, ctx) => {
+    const isAuthenticated = sessionStorage.getItem('is-authenticated')
+
+    if (!isAuthenticated) {
+      return res(
+        ctx.status(403),
+        ctx.json({
+          errorMessage: 'Not authorized',
+        }),
+      )
+    }
+
+    const currentUser = sessionStorage.getItem('currentUser'),
+    currUsersData = localStorage.getItem(currentUser)
+    
+    if (currUsersData) {
+      const resInfo = JSON.parse(currUsersData).filter(res => res.id !== body)
+      localStorage.setItem(currentUser, JSON.stringify(resInfo))
+      
+      return res(
+        ctx.status(200),
+        ctx.json(body),
+      )
+    }
+
+    else return res(
+      ctx.status(403),
+      ctx.json('Not found'),
+    )
+  }),
   
   rest.get('/reserve', (req, res, ctx) => {
     const isAuthenticated = sessionStorage.getItem('is-authenticated')
@@ -84,6 +113,7 @@ export const handlers = [
     }
     else reserves[date].push(time)
 
+    body.id = crypto.randomUUID()
     if (currUsersData) {
       resInfo = [...JSON.parse(currUsersData), body]
     }

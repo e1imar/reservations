@@ -9,6 +9,17 @@ export const reservationApi = createApi({
       query: () => ``,
       providesTags: ['Reserve'],
     }),
+    deleteRes: builder.mutation({
+      query: (payload) => ({
+        url: '',
+        method: 'DELETE',
+        body: payload,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+      invalidatesTags: ['Reserve'],
+    }),
     getTables: builder.query({
       query: () => `Reserve`,
       providesTags: ['Reserve']
@@ -27,4 +38,4 @@ export const reservationApi = createApi({
   }),
 })
 
-export const { useGetReservationsQuery, useGetTablesQuery, useAddResMutation } = reservationApi
+export const { useGetReservationsQuery, useGetTablesQuery, useAddResMutation, useDeleteResMutation } = reservationApi
