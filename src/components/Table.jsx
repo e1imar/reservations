@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Modal from 'react-bootstrap/Modal';
-import Alert from 'react-bootstrap/Alert';
-import { useAddResMutation } from '../services/reservation';
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
+import Modal from 'react-bootstrap/Modal'
+import Alert from 'react-bootstrap/Alert'
+import { useAddResMutation } from '../services/reservation'
 
 const Table = ({name, date, time, personQ, reserves, id: tableID, tableGroup}) => {
   const [addRes, response] = useAddResMutation(),
@@ -29,7 +29,7 @@ const Table = ({name, date, time, personQ, reserves, id: tableID, tableGroup}) =
         <li>{name}</li>
         <li>For {personQ} {personQ > 1 ? 'persons' : 'person'}</li>
         <li>Date: {date}</li>
-        <li>Time: {time}</li>
+        <li>Time: {time}:00</li>
       </ul>
     </Modal.Body>
     <Modal.Footer>

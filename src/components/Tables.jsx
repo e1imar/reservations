@@ -7,7 +7,7 @@ const Tables = (props) => {
   const {data, isLoading, error} = useGetTablesQuery()
 
   if (isLoading) return <div>Loading...</div>
-  if (error) return <div>{error}</div>
+  if (error) return <><div>{error.status}</div><div>{error.error}</div></>
 
   return <ListGroup>
     {Object.keys(data).filter(persons => persons >= props.personQ).map(tableGroup => <ListGroup.Item key={tableGroup}>

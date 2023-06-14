@@ -43,7 +43,7 @@ const ResForm = () => {
       </Form.Group>
       <Form.Group className="mb-3 me-4 d-inline-block">
         <Form.Label>Time:</Form.Label>
-        <Form.Select min={inputTime} value={time} onChange={e => setTime(e.target.value)} disabled={isPastDate}>
+        <Form.Select min={inputTime} value={time} onChange={e => setTime(Number(e.target.value))} disabled={isPastDate}>
           {timeOptions}
         </Form.Select>
       </Form.Group>
