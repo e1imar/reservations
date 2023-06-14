@@ -8,7 +8,11 @@ const Reservations = () => {
   const {data, isLoading, error} = useGetReservationsQuery()
 
   if (isLoading) return <div>Loading...</div>
-  if (error) return <><div>{error.status}</div><div>{error.error}</div></>
+  if (error) return <>
+  <div>{error.status}</div>
+  <h1>{error.error}</h1>
+  <div>No reservations</div>
+  </>
   
   const list = <ListGroup className="d-flex flex-row flex-wrap">
     {data?.map(res => <MadeRes key={res.tableID} {...res}>Cras justo odio</MadeRes>)}
