@@ -1,23 +1,25 @@
 import React, {useState, useEffect} from 'react'
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Alert from 'react-bootstrap/Alert';
-import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import FloatingLabel from 'react-bootstrap/FloatingLabel'
+import Alert from 'react-bootstrap/Alert'
+import { useNavigate } from 'react-router-dom'
+import { useLoginQuery } from '../services/reservation'
 
-function Login() {
-  const navigate = useNavigate();
-  const [login, setLogin] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+const Login = () => {
+  const navigate = useNavigate(),
+  [login, setLogin] = useState(''),
+  [password, setPassword] = useState(''),
+  [loading, setLoading] = useState(false),
+  [error, setError] = useState(null),
+  {isSuccess} = useLoginQuery(),
 
-  function onSubmit (e) {
+  onSubmit = e => {
     e.preventDefault()
     loginReq()
-  }
+  },
 
-  function loginReq () {
+  loginReq = () => {
     setLoading(true)
     const requestOptions = {
       method: 'POST',
@@ -32,19 +34,18 @@ function Login() {
       else navigate('/')
     })
     .catch(err => setError(err))
-  }
+  },
 
-  function toSignin (e) {
+  toSignin = e => {
     e.preventDefault()
     navigate('/signin')
   }
 
-  useEffect(function () {
-  if (sessionStorage.getItem('is-authenticated') === 'true') navigate('/')
-  }, [])
+  useEffect(() => {
+  if (isSuccess) navigate('/')
+  }, [isSuccess])
 
-  return (
-    <div className="centr">
+  return <div className="centr">
     <h1 className="mb-4">Log in</h1>
     <Form className="mb-5" onSubmit={onSubmit}>
       <FloatingLabel
@@ -68,8 +69,7 @@ function Login() {
       </Button>
     </Form>
     <p>Not registered yet? <a href='/signin' onClick={toSignin}>Sign in</a></p>
-    </div>
-  );
+  </div>
 }
 
 export default Login;

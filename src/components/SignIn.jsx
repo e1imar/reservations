@@ -1,48 +1,43 @@
 import React, { useState, useEffect } from 'react'
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Alert from 'react-bootstrap/Alert';
-import Modal from 'react-bootstrap/Modal';
-import { useNavigate } from "react-router-dom";
-import Login from './Login';
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import FloatingLabel from 'react-bootstrap/FloatingLabel'
+import Alert from 'react-bootstrap/Alert'
+import Modal from 'react-bootstrap/Modal'
+import Login from './Login'
+import { useNavigate } from "react-router-dom"
+import { useLoginQuery } from '../services/reservation'
 
 function SignIn() {
-  const navigate = useNavigate();
-  const [number, setNumber] = useState('')
-  const [login, setLogin] = useState('')
-  const [pass, setPass] = useState('')
-  const [pass2, setPass2] = useState('')
-  const [match, setMatch] = useState(pass === pass2)
-  const [error, setError] = useState(null)
-  const [show, setShow] = useState(false)
+  const navigate = useNavigate(),
+  [number, setNumber] = useState(''),
+  [login, setLogin] = useState(''),
+  [pass, setPass] = useState(''),
+  [pass2, setPass2] = useState(''),
+  [match, setMatch] = useState(pass === pass2),
+  [error, setError] = useState(null),
+  [show, setShow] = useState(false),
+  {isSuccess} = useLoginQuery(),
 
-  const modalLogin = <Modal show={show} onHide={handleClose} centered>
-    <Modal.Header closeButton>
-      <Modal.Title>Sucsessfully signed in</Modal.Title>
-    </Modal.Header>
-    <Login/>
-  </Modal>
+  handleClose = () => {setShow(false)},
+  handleShow = () => {setShow(true)},
 
-  function handleClose () {setShow(false)}
-  function handleShow () {setShow(true)}
-
-  function toLogin (e) {
+  toLogin = e => {
     e.preventDefault()
     navigate('/login')
-  }
+  },
 
-  function signinReq () {
+  signinReq = () => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({login, password: pass, number})
-    };
+    }
 
     return fetch('/signin', requestOptions)
-  }
+  },
 
-  function handleSubmit (e) {
+  handleSubmit = e => {
     setError(null)
     e.preventDefault();
     setMatch(pass === pass2)
@@ -59,11 +54,18 @@ function SignIn() {
       }
     })
     .catch(function (err) {setError(err + '')})
-  };
+  }
 
-  useEffect(function () {
-    if (sessionStorage.getItem('is-authenticated') === 'true') navigate('/')
-  }, [])
+  const modalLogin = <Modal show={show} onHide={handleClose} centered>
+    <Modal.Header closeButton>
+      <Modal.Title>Sucsessfully signed in</Modal.Title>
+    </Modal.Header>
+    <Login/>
+  </Modal>
+
+  useEffect(() => {
+    if (isSuccess) navigate('/')
+  }, [isSuccess])
 
   return (
     <div className="centr">
