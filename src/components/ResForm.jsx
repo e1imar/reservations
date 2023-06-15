@@ -1,15 +1,11 @@
-import React, {useState, useEffect} from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Tables from './Tables'
-import Alert from 'react-bootstrap/Alert';
-import NavBarWrapper from './NavBarWrapper';
+import Alert from 'react-bootstrap/Alert'
+import NavBarWrapper from './NavBarWrapper'
 
 const ResForm = () => {
-  const navigate = useNavigate(),
-  logedIn = sessionStorage.getItem('is-authenticated'),
-
-  newDate = new Date(),
+  const newDate = new Date(),
   today = newDate.toISOString().split('T')[0],
   timeNow = newDate.toLocaleTimeString([], { hour: '2-digit'}),
   inputTime = timeNow >= 12 ? (Number(timeNow) + 1) : 12,
@@ -29,10 +25,6 @@ const ResForm = () => {
   for (let index = 1; index <= 6; index++) {
     personOptions.push(<option key={index} value={index}>{index}</option>)
   }
-  
-  useEffect(() => {
-    if (logedIn !== 'true') navigate('/login')
-  }, [logedIn])
 
   return <NavBarWrapper>
     <h1 className="mb-3">Reserve a table</h1>
