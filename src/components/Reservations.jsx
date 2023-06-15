@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { useEffect} from 'react'
 import NavBarWrapper from './NavBarWrapper'
 import ListGroup from 'react-bootstrap/ListGroup'
 import MadeRes from './MadeRes'
+import { useNavigate } from 'react-router-dom'
 import { useGetReservationsQuery } from '../services/reservation'
 
 const Reservations = () => {
-  const {data, isLoading, error} = useGetReservationsQuery()
+  const {data, isLoading, error} = useGetReservationsQuery(),
+  navigate = useNavigate()
+  
+  useEffect(() => {
+    if (error.data.errorMessage === 'Not authorized') navigate('/login')
+  }, [error])
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <>
