@@ -4,13 +4,14 @@ import Form from 'react-bootstrap/Form'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Alert from 'react-bootstrap/Alert'
 import { useNavigate } from 'react-router-dom'
-import { useLoginMutation } from '../services/reservation'
+import { useCheckLoginQuery, useLoginMutation } from '../services/reservation'
 
 const Login = () => {
   const navigate = useNavigate(),
   [login, setLogin] = useState(''),
   [password, setPassword] = useState(''),
   [loginReq, {isSuccess, isLoading, error}] = useLoginMutation(),
+  {isSuccess: loged} = useCheckLoginQuery(),
 
   onSubmit = e => {
     e.preventDefault()
@@ -23,8 +24,8 @@ const Login = () => {
   }
 
   useEffect(() => {
-  if (isSuccess) navigate('/')
-  }, [isSuccess])
+  if (isSuccess || loged) navigate('/')
+  }, [isSuccess, loged])
 
   return <div className="centr">
     <h1 className="mb-4">Log in</h1>
