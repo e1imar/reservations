@@ -3,15 +3,17 @@ import { useNavigate } from 'react-router-dom'
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
+import { useLoginQuery } from '../services/reservation'
 
 const NavBarWrapper = ({children}) => {
-  const [logedIn, setLogedIn] = useState(sessionStorage.getItem('is-authenticated')),
+  const {error} = useLoginQuery({ refetchOnMountOrArgChange: true }),
   navigate = useNavigate(),
+  [auth, setAuth] = useState(true),
 
   logOut = e => {
     e.preventDefault()
     sessionStorage.removeItem('is-authenticated')
-    setLogedIn(sessionStorage.getItem('is-authenticated'))
+    setAuth(false)
   },
   toRes = e => {
     e.preventDefault()
@@ -23,17 +25,18 @@ const NavBarWrapper = ({children}) => {
   }
 
   useEffect(() => {
-    if (logedIn !== 'true') navigate('/login')
-  }, [logedIn])
+    if (error || !auth) navigate('/login')
+  }, [error, auth])
 
-  return !logedIn ? <div>redirecting...</div> : <>
+  useEffect(() => {console.log('navbar mounted')})
+
+  return error ? <div>redirecting...</div> : <div>
     <Navbar>
       <Container>
         <Nav className="me-auto">
           <Nav.Link href="/" onClick={toRes}>Reservations</Nav.Link>
           <Nav.Link href="/reserve" onClick={toMakeRes}>Reserve</Nav.Link>
         </Nav>
-        {/* <Navbar.Toggle /> */}
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
             <a href="/login" onClick={logOut}>Log out</a>
@@ -42,7 +45,7 @@ const NavBarWrapper = ({children}) => {
       </Container>
     </Navbar>
     <main>{children}</main>
-  </>
+  </div>
 }
 
 export default NavBarWrapper
