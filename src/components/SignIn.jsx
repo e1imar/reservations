@@ -6,7 +6,7 @@ import Alert from 'react-bootstrap/Alert'
 import Modal from 'react-bootstrap/Modal'
 import Login from './Login'
 import { useNavigate } from "react-router-dom"
-import { useLoginQuery } from '../services/reservation'
+import { useCheckLoginQuery, useSigninMutation } from '../services/reservation'
 
 function SignIn() {
   const navigate = useNavigate(),
@@ -15,48 +15,29 @@ function SignIn() {
   [pass, setPass] = useState(''),
   [pass2, setPass2] = useState(''),
   [match, setMatch] = useState(pass === pass2),
-  [error, setError] = useState(null),
   [show, setShow] = useState(false),
-  {isSuccess} = useLoginQuery(),
+  {isSuccess: loged} = useCheckLoginQuery(),
+  [signinReq, {error, isSuccess}] = useSigninMutation(),
 
-  handleClose = () => {setShow(false)},
-  handleShow = () => {setShow(true)},
+  handleClose = () => setShow(false),
+  handleShow = () => setShow(true),
 
   toLogin = e => {
     e.preventDefault()
     navigate('/login')
   },
 
-  signinReq = () => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({login, password: pass, number})
-    }
-
-    return fetch('/signin', requestOptions)
-  },
-
   handleSubmit = e => {
-    setError(null)
     e.preventDefault();
     setMatch(pass === pass2)
-    if (pass === pass2) signinReq()
-    .then(res => {
-      if (!res.ok) throw new Error(res.status)
-      else {
-        handleShow()
-        setNumber('')
-        setLogin('')
-        setPass('')
-        setPass2('')
-        setError(null)
-      }
-    })
-    .catch(function (err) {setError(err + '')})
-  }
+    if (pass === pass2) signinReq({login, password: pass, number})
+    setNumber('')
+    setLogin('')
+    setPass('')
+    setPass2('')
+  },
 
-  const modalLogin = <Modal show={show} onHide={handleClose} centered>
+  modalLogin = <Modal show={show} onHide={handleClose} centered>
     <Modal.Header closeButton>
       <Modal.Title>Sucsessfully signed in</Modal.Title>
     </Modal.Header>
@@ -64,7 +45,11 @@ function SignIn() {
   </Modal>
 
   useEffect(() => {
-    if (isSuccess) navigate('/')
+    if (loged) navigate('/')
+  }, [loged])
+
+  useEffect(() => {
+    if (isSuccess) handleShow()
   }, [isSuccess])
 
   return (
@@ -95,7 +80,7 @@ function SignIn() {
         </FloatingLabel>
         
         {!match && <Alert variant={"danger"} className="mb-3">Passwords don't match</Alert>}
-        {error && <Alert variant={"danger"} className="mb-3">{error}</Alert>}
+        {error && <Alert variant={"danger"} className="mb-3">{error.status} {error.data}</Alert>}
 
         <Button variant="primary" type="submit">
           Sign in

@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
-import { useLoginQuery } from '../services/reservation'
+import { useCheckLoginQuery } from '../services/reservation'
 
 const NavBarWrapper = ({children}) => {
-  const {error} = useLoginQuery({ refetchOnMountOrArgChange: true }),
+  const {error} = useCheckLoginQuery({ refetchOnMountOrArgChange: true }),
   navigate = useNavigate(),
   [auth, setAuth] = useState(true),
 
@@ -27,8 +27,6 @@ const NavBarWrapper = ({children}) => {
   useEffect(() => {
     if (error || !auth) navigate('/login')
   }, [error, auth])
-
-  useEffect(() => {console.log('navbar mounted')})
 
   return error ? <div>redirecting...</div> : <div>
     <Navbar>

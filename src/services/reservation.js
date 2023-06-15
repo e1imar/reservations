@@ -5,9 +5,31 @@ export const reservationApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   tagTypes: ['Reserve'],
   endpoints: builder => ({
-    login: builder.query({
+    checkLogin: builder.query({
       query: () => `login`,
       providesTags: ['Reserve'],
+    }),
+    login: builder.mutation({
+      query: (payload) => ({
+        url: 'login',
+        method: 'POST',
+        body: payload,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+      invalidatesTags: ['Reserve'],
+    }),
+    signin: builder.mutation({
+      query: (payload) => ({
+        url: 'signin',
+        method: 'POST',
+        body: payload,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+      invalidatesTags: ['Reserve'],
     }),
     getReservations: builder.query({
       query: () => ``,
@@ -42,4 +64,4 @@ export const reservationApi = createApi({
   }),
 })
 
-export const { useLoginQuery, useGetReservationsQuery, useGetTablesQuery, useAddResMutation, useDeleteResMutation } = reservationApi
+export const { useCheckLoginQuery, useGetReservationsQuery, useGetTablesQuery, useLoginMutation, useSigninMutation,  useAddResMutation, useDeleteResMutation } = reservationApi

@@ -4,36 +4,17 @@ import Form from 'react-bootstrap/Form'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Alert from 'react-bootstrap/Alert'
 import { useNavigate } from 'react-router-dom'
-import { useLoginQuery } from '../services/reservation'
+import { useLoginMutation } from '../services/reservation'
 
 const Login = () => {
   const navigate = useNavigate(),
   [login, setLogin] = useState(''),
   [password, setPassword] = useState(''),
-  [loading, setLoading] = useState(false),
-  [error, setError] = useState(null),
-  {isSuccess} = useLoginQuery(),
+  [loginReq, {isSuccess, isLoading, error}] = useLoginMutation(),
 
   onSubmit = e => {
     e.preventDefault()
-    loginReq()
-  },
-
-  loginReq = () => {
-    setLoading(true)
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({login, password})
-    };
-
-    fetch('/login', requestOptions)
-    .then(res => {
-      setLoading(false)
-      if (!res.ok) throw new Error(res.status)
-      else navigate('/')
-    })
-    .catch(err => setError(err))
+    loginReq({login, password})
   },
 
   toSignin = e => {
@@ -60,7 +41,7 @@ const Login = () => {
         <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required/>
       </FloatingLabel>
 
-      {loading && <Alert variant={"info"} className="mb-3">Loading...</Alert>}
+      {isLoading && <Alert variant={"info"} className="mb-3">Loading...</Alert>}
       {error && <Alert variant={"danger"} className="mb-3">Incorrect login or password</Alert>}
       
 
