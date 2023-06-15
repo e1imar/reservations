@@ -3,17 +3,17 @@ import { useNavigate } from 'react-router-dom'
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
-import { useCheckLoginQuery } from '../services/reservation'
+import { useCheckLoginQuery, useLoginMutation } from '../services/reservation'
+import { reservationApi } from '../services/reservation'
 
 const NavBarWrapper = ({children}) => {
-  const {error} = useCheckLoginQuery({ refetchOnMountOrArgChange: true }),
+  const {error, isLoading, refetch} = useCheckLoginQuery(),
   navigate = useNavigate(),
-  [auth, setAuth] = useState(true),
 
   logOut = e => {
     e.preventDefault()
     sessionStorage.removeItem('is-authenticated')
-    setAuth(false)
+    refetch()
   },
   toRes = e => {
     e.preventDefault()
@@ -25,10 +25,13 @@ const NavBarWrapper = ({children}) => {
   }
 
   useEffect(() => {
-    if (error || !auth) navigate('/login')
-  }, [error, auth])
+    if (error) navigate('/login')
+  }, [error])
 
-  return error ? <div>redirecting...</div> : <div>
+  if (error) return <div>redirecting...</div>
+  if (isLoading) return <div>loading...</div>
+  
+  return <>
     <Navbar>
       <Container>
         <Nav className="me-auto">
@@ -43,7 +46,7 @@ const NavBarWrapper = ({children}) => {
       </Container>
     </Navbar>
     <main>{children}</main>
-  </div>
+  </>
 }
 
 export default NavBarWrapper
