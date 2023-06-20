@@ -29,12 +29,12 @@ Application uses Mock Service Worker to mock the REST API endpoints. The mock se
 
 ## Technologies used
 
-- [React](https://reactjs.org/) single page application
-- [React Router](https://reacttraining.com/react-router/web/guides/philosophy) client side routing
-- [RTK Query](https://redux-toolkit.js.org/rtk-query/overview) data fetching and caching tool (state manager)
-- [React bootstrap](https://react-bootstrap.github.io) UI tools
-- [MSW](https://mswjs.io/) API mocking
-- [Vite](https://vitejs.dev/) build tool
+- [React](https://reactjs.org/) - single page application
+- [React Router](https://reacttraining.com/react-router/web/guides/philosophy) - client side routing
+- [RTK Query](https://redux-toolkit.js.org/rtk-query/overview) - data fetching and caching tool (state manager)
+- [React bootstrap](https://react-bootstrap.github.io) - UI tools
+- [MSW](https://mswjs.io/) - API mocking
+- [Vite](https://vitejs.dev/) - build tool
 
 
 To view a live example, **[click here](https://reservate.vercel.app)**
