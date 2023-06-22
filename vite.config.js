@@ -10,7 +10,7 @@ export default defineConfig({
     }),
     react()
   ],
-  build: {target: ['es2015', 'edge88', 'firefox78', 'chrome87', 'safari14']},
+  build: {targets: ['es2015', 'edge88', 'firefox78', 'chrome87', 'safari14']},
   optimizeDeps: {
     esbuildOptions: { target: 'es2015'},
   }
