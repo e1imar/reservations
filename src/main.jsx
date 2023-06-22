@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { worker } from './mocks/browser'
 import { store } from './store'
 import { Provider } from 'react-redux'
-import '../polyfill.js'
 
 worker.start()
 
